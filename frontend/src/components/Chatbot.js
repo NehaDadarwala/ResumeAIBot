@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 export default function Chatbot({ resumeText, greeting }) {
@@ -10,6 +10,14 @@ export default function Chatbot({ resumeText, greeting }) {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const scrollRef = useRef(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]); // run when messages update
+
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -33,7 +41,7 @@ export default function Chatbot({ resumeText, greeting }) {
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-8 border rounded-2xl shadow-2xl bg-white dark:bg-gray-900 flex flex-col min-h-[60vh] h-[80vh] md:h-[70vh] lg:h-[80vh] p-4 md:p-8">
-      <div className="flex-1 overflow-y-auto p-2 md:p-4 space-y-4 md:space-y-6">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-2 md:p-4 space-y-4 md:space-y-6">
         {messages.map((msg, i) => (
           <div key={i} className={msg.from === 'user' ? 'text-right' : 'text-left'}>
             <span className={msg.from === 'user' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'}

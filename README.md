@@ -36,7 +36,17 @@ cd ai-resume-chat
 
 ---
 
-### 2. Start the Backend
+### 2. Add Environment Variables
+
+#### Backend (backend/.env)
+COHERE_API_KEY=your_cohere_api_key
+
+#### Frontend (frontend/.env)
+REACT_APP_API_URL=http://localhost:5000
+
+---
+
+### 3. Start the Backend
 
 cd backend
 npm install
@@ -46,22 +56,13 @@ npm run dev
 
 ---
 
-### 3. Start the Frontend
+### 4. Start the Frontend
 
 cd ../frontend
 npm install
 npm run dev
 
 # The frontend will run on http://localhost:3000
-
----
-
-## 🌐 Environment Variables
-
-### Backend (backend/.env)
-
-PORT=5000
-COHERE_API_KEY=your_cohere_api_key
 
 ---
 
