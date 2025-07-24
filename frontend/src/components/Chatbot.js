@@ -9,7 +9,6 @@ export default function Chatbot({ resumeText, greeting }) {
     }
   ]);
   const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
@@ -24,19 +23,27 @@ export default function Chatbot({ resumeText, greeting }) {
     const userMessage = input;
     setMessages(msgs => [...msgs, { from: 'user', text: userMessage }]);
     setInput('');
-    setLoading(true);
     try {
       const res = await fetch(`${process.env.REACT_APP_API_URL}/api/ask-cohere`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage, resumeText })
       });
-      const data = await res.json();
-      setMessages(msgs => [...msgs, { from: 'bot', text: data.response || data.error || 'No response from AI.' }]);
+      if (!res.body) throw new Error('No response body');
+
+      const reader = res.body.getReader();
+      let aiMessage = '';
+      setMessages(msgs => [...msgs, { from: 'bot', text: '' }]);
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        aiMessage += new TextDecoder('utf-8').decode(value);
+        setMessages(msgs => [...msgs.slice(0, -1), { from: 'bot', text: aiMessage }]);
+      }
     } catch (err) {
       setMessages(msgs => [...msgs, { from: 'bot', text: 'Error contacting AI backend.' }]);
     }
-    setLoading(false);
   };
 
   return (
@@ -53,13 +60,6 @@ export default function Chatbot({ resumeText, greeting }) {
             </span>
           </div>
         ))}
-        {loading && (
-          <div className="text-left">
-            <span className="bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-400" style={{ display: 'inline-block', borderRadius: '1rem', padding: '0.75rem 1.25rem', margin: '0.25rem 0', maxWidth: '80%', wordWrap: 'break-word', fontSize: '1.1rem' }}>
-              Thinking...
-            </span>
-          </div>
-        )}
       </div>
       <div className="p-2 md:p-4 border-t flex gap-2 bg-white dark:bg-gray-900 sticky bottom-0">
         <input

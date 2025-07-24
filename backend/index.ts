@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { cohere } from '@ai-sdk/cohere';
-import { generateText } from 'ai';
+import { generateText, streamText } from 'ai';
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ app.post('/api/ask-cohere', async (req: express.Request, res: express.Response) 
         return res.status(400).json({ error: 'Missing message or resumeText' });
     }
     try {
-        const result = await generateText({
+        const result = await streamText({
             model: cohere('command-r-plus'),
             messages: [
                 {
@@ -36,8 +36,7 @@ app.post('/api/ask-cohere', async (req: express.Request, res: express.Response) 
                 { role: 'user', content: message },
             ],
         });
-        const aiText = result.text?.trim() || 'No response from AI.';
-        res.json({ response: aiText });
+        result.pipeTextStreamToResponse(res);
     } catch (err) {
         console.error('Cohere error:', err);
         res.status(500).json({ error: 'Failed to get response from Cohere.' });
