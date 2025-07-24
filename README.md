@@ -31,8 +31,8 @@ project-root/
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-username/resume-ai-chat.git
-cd resume-ai-chat
+git clone https://github.com/NehaDadarwala/ResumeAIBot
+cd ai-resume-chat
 
 ---
 
