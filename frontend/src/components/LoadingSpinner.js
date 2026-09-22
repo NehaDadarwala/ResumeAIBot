@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default function LoadingSpinner({ message = "Loading..." }) {
+export default function LoadingSpinner({ message = 'Loading...' }) {
   return (
-    <div className="text-center py-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-      <p className="text-gray-600 dark:text-gray-300">{message}</p>
+    <div className="flex flex-1 flex-col items-center justify-center py-16">
+      <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-900 dark:border-zinc-700 dark:border-t-zinc-100" />
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">{message}</p>
     </div>
   );
-} 
+}

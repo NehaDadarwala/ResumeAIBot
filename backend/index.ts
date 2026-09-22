@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { cohere } from '@ai-sdk/cohere';
-import { generateText, streamText } from 'ai';
+import { streamText } from 'ai';
 
 dotenv.config();
 
@@ -27,7 +27,7 @@ app.post('/api/ask-cohere', async (req: express.Request, res: express.Response) 
     }
     try {
         const result = await streamText({
-            model: cohere('command-r-plus'),
+            model: cohere('command-a-plus-05-2026'),
             messages: [
                 {
                     role: 'system',

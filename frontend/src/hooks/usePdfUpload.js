@@ -6,6 +6,7 @@ export default function usePdfUpload() {
   const [extractedText, setExtractedText] = useState('');
   const [pdfInfo, setPdfInfo] = useState(null);
   const [greeting, setGreeting] = useState('');
+  const [isLoadingText, setIsLoadingText] = useState(true);
 
   const handleUploadSuccess = (pages, wordCount, text, info, greetingText) => {
     console.log(pages, wordCount, text, info, greetingText);
@@ -23,17 +24,12 @@ export default function usePdfUpload() {
     setGreeting('');
   };
 
-  // 🚀 Default upload logic
   useEffect(() => {
     const loadDefaultPdf = async () => {
-
       try {
         const response = await fetch(NehaDadarwalaPdf);
         const blob = await response.blob();
         const file = new File([blob], 'resume.pdf', { type: 'application/pdf' });
-        console.log('Blob type:', blob.type);
-        console.log('Blob size:', blob.size);
-
         const result = await parsePDF(file);
         handleUploadSuccess(
           result.pages,
@@ -44,16 +40,18 @@ export default function usePdfUpload() {
         );
       } catch (error) {
         console.error('Failed to load default PDF:', error);
+      } finally {
+        setIsLoadingText(false);
       }
     };
 
     loadDefaultPdf();
   }, []);
 
-
   return {
     extractedText,
     pdfInfo,
+    isLoadingText,
     greeting,
     handleUploadSuccess,
     handleReset,
